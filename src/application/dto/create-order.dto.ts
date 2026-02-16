@@ -1,6 +1,7 @@
 export class CreateOrderDto {
-  orderId?: number;
-  userId: number;
-  status: string;
-  totalAmount: number;
+  customerId: string;
+  items: {
+    productId: string;
+    quantity: number;
+  }[];
 }
