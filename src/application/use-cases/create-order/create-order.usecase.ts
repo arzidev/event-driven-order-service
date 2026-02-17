@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { EventBusPort } from 'src/domain/ports/event-bus.port';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { OrderRepository } from 'src/infrastructure/prisma/order.repository';
-import { OrderDtoMapper } from '../mappers/order-dto.mapper';
-import { OrderResponseDto } from '../dto/order-response.dto';
+import type { EventBusPort } from '@domain/ports/event-bus.port';
+import { CreateOrderDto } from '@application/dto/create-order.dto';
+import { OrderDtoMapper } from '@application/mappers/order-dto.mapper';
+import { OrderResponseDto } from '@application/dto/order-response.dto';
 import { randomUUID } from 'crypto';
-import { OrderItem } from 'src/domain/entities/order-item.entity';
-import { Order } from 'src/domain/entities/order.entity';
+import { OrderItem } from '@domain/entities/order-item.entity';
+import { Order } from '@domain/entities/order.entity';
+import type { IOrderRepository } from '@domain/repositories/order.repository';
 
 @Injectable()
 export class CreateOrderUseCase {
   constructor(
+    @Inject('OrderRepository') private readonly orderRepo: IOrderRepository,
     @Inject('EventBusPort') private readonly eventBus: EventBusPort,
-    @Inject('OrderRepository') private readonly orderRepo: OrderRepository,
   ) {}
 
   async execute(orderData: CreateOrderDto): Promise<OrderResponseDto> {
