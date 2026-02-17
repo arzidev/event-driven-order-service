@@ -6,11 +6,10 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
-import { CreateOrderDto } from 'src/application/dto/create-order.dto';
-import { CreateOrderUseCase } from 'src/application/use-cases/create-order.usecase';
-import { FindOrderByIdUseCase } from 'src/application/use-cases/find-order-by-id.usecase';
-import { FindAllOrdersUseCase } from 'src/application/use-cases/find-all-orders.usecase';
+import { CreateOrderDto } from '@application/dto/create-order.dto';
+import { CreateOrderUseCase } from '@application/use-cases/create-order/create-order.usecase';
+import { FindAllOrdersUseCase } from '@application/use-cases/find-all-orders/find-all-orders.usecase';
+import { FindOrderByIdUseCase } from '@application/use-cases/find-order-by-id/find-order-by-id.usecase';
 
 @Controller('orders')
 export class OrdersController {

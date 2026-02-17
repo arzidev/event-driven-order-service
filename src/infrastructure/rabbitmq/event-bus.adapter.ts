@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { EventBusPort } from 'src/domain/ports/event-bus.port';
+import { EventBusPort } from '@domain/ports/event-bus.port';
 
 export class EventBusAdapter implements EventBusPort {
   constructor(

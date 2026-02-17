@@ -1,4 +1,4 @@
-import { Order } from 'src/domain/entities/order.entity';
+import { Order } from '@domain/entities/order.entity';
 
 export class OrderDtoMapper {
   static toResponse(order: Order) {
