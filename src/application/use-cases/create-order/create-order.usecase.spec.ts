@@ -1,27 +1,19 @@
 import { CreateOrderUseCase } from './create-order.usecase';
-import { IOrderRepository } from '@domain/repositories/order.repository';
-import { EventBusPort } from '@domain/ports/event-bus.port';
 import { Order } from '@domain/entities/order.entity';
-import { OrderItem } from '@domain/entities/order-item.entity';
+import {
+  buildOrder,
+  createEventBusMock,
+  createOrderRepositoryMock,
+} from './create-order.mocks';
 
 describe('CreateOrderUseCase', () => {
   let useCase: CreateOrderUseCase;
-  let orderRepository: jest.Mocked<IOrderRepository>;
-  let eventBus: jest.Mocked<EventBusPort>;
+  let orderRepository: ReturnType<typeof createOrderRepositoryMock>;
+  let eventBus: ReturnType<typeof createEventBusMock>;
 
   beforeEach(() => {
-    orderRepository = {
-      create: jest.fn(),
-      findById: jest.fn(),
-      findAll: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    };
-
-    eventBus = {
-      emitEvent: jest.fn().mockResolvedValue(undefined),
-      sendEvent: jest.fn().mockResolvedValue(undefined),
-    } as jest.Mocked<EventBusPort>;
+    orderRepository = createOrderRepositoryMock();
+    eventBus = createEventBusMock();
 
     useCase = new CreateOrderUseCase(orderRepository, eventBus);
   });
@@ -32,18 +24,11 @@ describe('CreateOrderUseCase', () => {
 
   describe('execute', () => {
     it('should create an order with one item and emit event', async () => {
-      const mockOrder = new Order({
+      const mockOrder = buildOrder({
         id: 'order-1',
         customerId: 'customer-1',
-        status: 'created',
         items: [
-          new OrderItem({
-            id: 'item-1',
-            orderId: 'order-1',
-            productId: 'product-1',
-            quantity: 2,
-            price: 100,
-          }),
+          { id: 'item-1', productId: 'product-1', quantity: 2, price: 100 },
         ],
       });
 
@@ -77,25 +62,12 @@ describe('CreateOrderUseCase', () => {
     });
 
     it('should calculate total correctly with multiple items', async () => {
-      const mockOrder = new Order({
+      const mockOrder = buildOrder({
         id: 'order-2',
         customerId: 'customer-1',
-        status: 'created',
         items: [
-          new OrderItem({
-            id: 'item-1',
-            orderId: 'order-2',
-            productId: 'product-1',
-            quantity: 3,
-            price: 100,
-          }),
-          new OrderItem({
-            id: 'item-2',
-            orderId: 'order-2',
-            productId: 'product-2',
-            quantity: 1,
-            price: 100,
-          }),
+          { id: 'item-1', productId: 'product-1', quantity: 3, price: 100 },
+          { id: 'item-2', productId: 'product-2', quantity: 1, price: 100 },
         ],
       });
 

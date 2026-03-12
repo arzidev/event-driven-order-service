@@ -1,59 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindAllOrdersUseCase } from './find-all-orders.usecase';
-import { IOrderRepository } from '@domain/repositories/order.repository';
-import { Order } from '@domain/entities/order.entity';
-import { OrderItem } from '@domain/entities/order-item.entity';
+import {
+  buildMockOrders,
+  createOrderRepositoryMock,
+} from './find-all-orders.mocks';
 
 describe('FindAllOrdersUseCase', () => {
   let useCase: FindAllOrdersUseCase;
-  let orderRepository: jest.Mocked<IOrderRepository>;
+  let orderRepository: ReturnType<typeof createOrderRepositoryMock>;
 
-  const mockOrders = [
-    new Order({
-      id: 'order-1',
-      customerId: 'customer-1',
-      status: 'created',
-      items: [
-        new OrderItem({
-          id: 'item-1',
-          orderId: 'order-1',
-          productId: 'product-1',
-          quantity: 2,
-          price: 50,
-        }),
-      ],
-    }),
-    new Order({
-      id: 'order-2',
-      customerId: 'customer-2',
-      status: 'created',
-      items: [
-        new OrderItem({
-          id: 'item-2',
-          orderId: 'order-2',
-          productId: 'product-2',
-          quantity: 1,
-          price: 100,
-        }),
-        new OrderItem({
-          id: 'item-3',
-          orderId: 'order-2',
-          productId: 'product-3',
-          quantity: 3,
-          price: 25,
-        }),
-      ],
-    }),
-  ];
+  const mockOrders = buildMockOrders();
 
   beforeEach(async () => {
-    const mockOrderRepository = {
-      create: jest.fn(),
-      findById: jest.fn(),
-      findAll: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    };
+    const mockOrderRepository = createOrderRepositoryMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
