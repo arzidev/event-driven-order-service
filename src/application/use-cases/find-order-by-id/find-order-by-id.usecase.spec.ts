@@ -1,36 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOrderByIdUseCase } from './find-order-by-id.usecase';
-import { IOrderRepository } from '@domain/repositories/order.repository';
-import { Order } from '@domain/entities/order.entity';
-import { OrderItem } from '@domain/entities/order-item.entity';
+import {
+  buildMockOrder,
+  createOrderRepositoryMock,
+} from './find-order-by-id.mocks';
 
 describe('FindOrderByIdUseCase', () => {
   let useCase: FindOrderByIdUseCase;
-  let orderRepository: jest.Mocked<IOrderRepository>;
+  let orderRepository: ReturnType<typeof createOrderRepositoryMock>;
 
-  const mockOrder = new Order({
-    id: 'test-order-id',
-    customerId: 'test-customer',
-    status: 'created',
-    items: [
-      new OrderItem({
-        id: 'test-item-id',
-        orderId: 'test-order-id',
-        productId: 'product-1',
-        quantity: 2,
-        price: 100,
-      }),
-    ],
-  });
+  const mockOrder = buildMockOrder();
 
   beforeEach(async () => {
-    const mockOrderRepository = {
-      create: jest.fn(),
-      findById: jest.fn(),
-      findAll: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    };
+    const mockOrderRepository = createOrderRepositoryMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
